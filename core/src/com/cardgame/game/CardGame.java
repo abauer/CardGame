@@ -22,7 +22,7 @@ public class CardGame extends ApplicationAdapter {
 	
 	public static int WIDTH = 640;
 	public static int HEIGHT = 480;
-	public static int SCALE = 4;
+	public static int SCALE = 2;
 	public static String TITLE = "Guard Games";
 	
 	public static final float STEP = 1/60f;
