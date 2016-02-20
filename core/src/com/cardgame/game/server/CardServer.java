@@ -21,6 +21,7 @@ public class CardServer extends Connection {
 			connection = new ServerSocket(port,0,InetAddress.getLocalHost()).accept();
 			bread = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			bwrite = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(connection.getOutputStream())));
+			System.out.println("Please connect to:"+connection.getInetAddress());
 			connected = true;
 		}catch (IOException e){
 			e.printStackTrace();

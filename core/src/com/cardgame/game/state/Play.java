@@ -2,6 +2,7 @@ package com.cardgame.game.state;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.cardgame.game.DeckManager;
 import com.cardgame.game.server.CardClient;
 import com.cardgame.game.server.CardServer;
 import com.cardgame.game.server.Connection;
@@ -12,13 +13,14 @@ public class Play extends GameState {
 	
 	boolean connected;
 	Connection c;
+	DeckManager deck;
+	
 	public Play(GameStateManager gsm,String address){
 		super(gsm);
 		connected = false;
-		System.out.println("starting client");
 		c = new CardClient(address,PORT);
 		c.start();
-		System.out.println("continuing on");
+		System.out.println("client started");
 		
 		//connect
 		
@@ -28,10 +30,10 @@ public class Play extends GameState {
 	public Play(GameStateManager gsm){
 		super(gsm);
 		connected = false;
-		System.out.println("strating server");
 		c = new CardServer(PORT);
 		c.start();
-		System.out.println("continuing");
+		System.out.println("server started");
+		deck = new DeckManager();
 		//start server
 		//show IP
 		//setup deck
