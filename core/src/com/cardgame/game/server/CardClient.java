@@ -9,8 +9,6 @@ import java.net.Socket;
 
 public class CardClient extends Connection{
 	
-	String address;
-	
 	public CardClient(String address,int port){
 		super(port);
 		this.address = address;
@@ -19,6 +17,7 @@ public class CardClient extends Connection{
 	protected void setupConnection(){
 		try {
 			connection = new Socket(address,port);
+			System.out.println("client started");
 			bread = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			bwrite = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
 			bwrite.write(connection.getLocalAddress().getHostAddress()); bwrite.newLine();

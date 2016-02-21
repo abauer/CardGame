@@ -15,13 +15,15 @@ public class CardServer extends Connection {
 		super(port);
 	}
 	
-	@SuppressWarnings("resource")
 	protected void setupConnection(){
+		System.out.println("server started");
 		try{
-			connection = new ServerSocket(port,0,InetAddress.getLocalHost()).accept();
+			ServerSocket listen = new ServerSocket(port,0,InetAddress.getLocalHost()); //need to check if this works for LAN
+			address = listen.getInetAddress().toString();
+			System.out.println("\nPlease connect to:"+address);
+			connection = listen.accept();
 			bread = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			bwrite = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(connection.getOutputStream())));
-			System.out.println("Please connect to:"+connection.getInetAddress());
 			connected = true;
 		}catch (IOException e){
 			e.printStackTrace();

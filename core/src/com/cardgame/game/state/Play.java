@@ -2,6 +2,7 @@ package com.cardgame.game.state;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.cardgame.game.BoardManager;
 import com.cardgame.game.DeckManager;
 import com.cardgame.game.server.CardClient;
 import com.cardgame.game.server.CardServer;
@@ -11,34 +12,37 @@ public class Play extends GameState {
 	
 	public final static int PORT = 8900;
 	
-	boolean connected;
 	Connection c;
-	DeckManager deck;
+	boolean connected;
+	BoardManager game;
+	int mask;
+	
 	
 	public Play(GameStateManager gsm,String address){
 		super(gsm);
 		connected = false;
+		mask = 2; //Player 2
+		System.out.println("starting client");
 		c = new CardClient(address,PORT);
 		c.start();
-		System.out.println("client started");
-		
-		//connect
-		
-		//do stuff
+		long t = Long.valueOf(c.getString());
+		System.out.println("lets make a deck");
+		game = new BoardManager(t);
+		connected = true;
+		System.out.println("\nLets Play a game!");
 	}
 	
-	public Play(GameStateManager gsm){
+	public Play(GameStateManager gsm){ 
 		super(gsm);
 		connected = false;
+		mask = 1; //Player 1
+		System.out.println("starting server");
 		c = new CardServer(PORT);
 		c.start();
-		System.out.println("server started");
-		deck = new DeckManager();
-		//start server
-		//show IP
-		//setup deck
-		
-		//wait for connection
+		game = new BoardManager();
+		c.sendString(((Long)game.getSeed()).toString());
+		connected = true;
+		System.out.println("\nLets Play a game!");
 	}
 	
 	public void handleInput(float dt){
@@ -63,10 +67,6 @@ public class Play extends GameState {
 	}
 	
 	public void update(float dt){
-		if(!connected){
-			//connect 
-			return;
-		}
 		handleInput(dt);
 	}
 	
@@ -74,12 +74,16 @@ public class Play extends GameState {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		sb.begin();
 		titleFont.draw(sb, "TEST", 200, 400);
-		drawConnectionInfo();
+		if(!connected)
+			drawConnectionInfo();
+		else
+			game.drawBoard(sb, mask);
 		sb.end();
 	}
 
 	private void drawConnectionInfo(){
 		c.draw(sb,titleFont);
+		c.showAddress(sb, titleFont);
 	}
 	public void dispose(){}
 	
